@@ -22,8 +22,7 @@ def report_airports_for_state():
     print("\nIATA\tAirport Name\t\t\t\t\tCity")
     print("-" * 77)
 
-    #get_impl().report_airports_for_state(context)
-    rxpyImpl.report_airports_for_state(context)
+    get_impl().report_airports_for_state(context)
 
 
 @climenu.menu()
@@ -36,8 +35,7 @@ def report_airports_near_location():
     print("IATA\tAirport Name\t\t\t\t\tState\tCity\t\t\t\tDistance")
     print("-" * 105)
 
-    #get_impl().report_airports_near_location(context)
-    rxpyImpl.report_airports_near_location(context)
+    get_impl().report_airports_near_location(context)
 
 
 @climenu.menu()
@@ -49,8 +47,7 @@ def report_airport_metrics():
     print("IATA\tAirport Name\t\t\t\t    Total\tCancelled %\tDiverted %")
     print("-" * 91)
 
-    #get_impl().report_airport_metrics(context)
-    rxpyImpl.report_airport_metrics(context)
+    get_impl().report_airport_metrics(context)
 
 
 @climenu.menu()
@@ -63,12 +60,11 @@ def report_airports_with_highest_cancellation_rate():
     print("IATA\tAirport Name\t\t\t\tCancelled %")
     print("-" * 60)
 
-    #get_impl().report_airports_with_highest_cancellation_rate(context)
-    rxpyImpl.report_airports_with_highest_cancellation_rate(context)
+    get_impl().report_airports_with_highest_cancellation_rate(context)
 
 
 def get_impl():
-    return pandasImpl
+    return rxpyImpl
 
 if __name__ == "__main__":
     climenu.settings.clear_screen = False
