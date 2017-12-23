@@ -3,9 +3,7 @@
 """
 
 import pandas as pd
-from collections import OrderedDict
-from geopy.distance import vincenty
-from report.airport import AirportReports, AirportMetrics
+from report.airport import AirportMetrics, AirportReports, distance
 
 
 class PandasAirportReports(AirportReports):
@@ -22,11 +20,11 @@ class PandasAirportReports(AirportReports):
 
     def report_airports_near_location(self, ctx):
         airports = pd.read_csv(ctx.repo.airports_file())
-        distance = []
+        dist_values = []
         for airport in airports.itertuples():
-            distance.append(vincenty((airport.lat, airport.long),
-                                     ctx.location).miles)
-        airports['distance'] = distance
+            dist_values.append(distance((airport.lat, airport.long),
+                                        ctx.location).miles)
+        airports['distance'] = dist_values
         result = airports[airports.distance < ctx.distance].sort_values(by='distance')
 
         for row in result.itertuples():
@@ -43,13 +41,13 @@ class PandasAirportReports(AirportReports):
         airports = pd.read_csv(repo.airports_file())
         flights = pd.read_csv(repo.flights_file(ctx.year))
         metrics = self.generate_metrics(flights.itertuples(), airports)
-        result = OrderedDict(sorted(metrics.items(),
-                                    key=lambda a: a[1].totalFlights,
-                                    reverse=True))
+        result = sorted(metrics.values(),
+                        key=lambda airport: airport.totalFlights,
+                        reverse=True)
 
-        for iata, m in result.items():
+        for m in result:
             print("{0:3}\t{1:<35}\t{2:>9,d}\t{3:>6.1f}\t\t{4:>6.1f}".format(
-                iata,
+                m.subject.iata,
                 m.subject.airport[:35],
                 m.totalFlights,
                 m.cancellation_rate() * 100.0,
@@ -61,17 +59,17 @@ class PandasAirportReports(AirportReports):
         airports = pd.read_csv(repo.airports_file())
         flights = pd.read_csv(repo.flights_file(ctx.year))
         metrics = self.generate_metrics(flights.itertuples(), airports)
-        result = OrderedDict(sorted(metrics.items(),
-                                    key=lambda a: a[1].cancellation_rate(),
-                                    reverse=True))
+        result = sorted(metrics.values(),
+                        key=lambda airport: airport.cancellation_rate(),
+                        reverse=True)
 
         count = 0
-        for iata, m in result.items():
+        for m in result:
             count += 1
             if count > ctx.limit:
                 break
             print("{0:3}\t{1:<35}\t{2:>6.1f}".format(
-                iata,
+                m.subject.iata,
                 m.subject.airport[:35],
                 m.cancellation_rate() * 100.0)
             )

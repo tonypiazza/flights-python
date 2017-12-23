@@ -1,23 +1,29 @@
 """
-    Pandas implementation of Airport reports
+    Functions and classes used by implementations of Airport reports.
 """
 
+from geopy.distance import vincenty
 from repository import Repository
 from report.metrics import FlightBasedMetrics
 
 
+def distance(location1, location2, units='miles'):
+    result = vincenty(location1, location2)
+    return result.__getattribute__(units)
+
+
 class AirportReports(object):
     def report_airports_for_state(self, ctx):
-        pass
+        raise NotImplementedError
 
     def report_airports_near_location(self, ctx):
-        pass
+        raise NotImplementedError
 
     def report_airport_metrics(self, ctx):
-        pass
+        raise NotImplementedError
 
     def report_airports_with_highest_cancellation_rate(self, ctx):
-        pass
+        raise NotImplementedError
 
 
 class AirportMetrics(FlightBasedMetrics):
@@ -35,7 +41,7 @@ class AirportMetrics(FlightBasedMetrics):
         if flight.Origin == self.subject.iata:
             self.totalOrigins += 1
             # cancellations are counted only for the origin airport
-            if int(flight.Cancelled):
+            if flight.Cancelled:
                 self.totalCancelled += 1
                 if flight.CancellationCode == 'A':
                     self.totalCancelledCarrier += 1
@@ -48,8 +54,9 @@ class AirportMetrics(FlightBasedMetrics):
         elif flight.Dest == self.subject.iata:
             self.totalDestinations += 1
             # diversions are counted only for the destination airport
-            if int(flight.Diverted):
+            if flight.Diverted:
                 self.totalDiverted += 1
+
 
 class ReportContext(object):
     def __init__(self):

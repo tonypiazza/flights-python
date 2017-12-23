@@ -2,9 +2,7 @@
     RxPy implementation of Airport reports
 """
 
-from collections import namedtuple
-from geopy.distance import vincenty
-from report.airport import AirportReports, AirportMetrics
+from report.airport import AirportMetrics, AirportReports, distance
 
 
 class RxPyAirportReports(AirportReports):
@@ -24,7 +22,7 @@ class RxPyAirportReports(AirportReports):
     def report_airports_near_location(self, ctx):
         ctx.repo \
            .airports_observable() \
-           .map(lambda airport: self.add_distance(airport, ctx.location)) \
+           .map(lambda airport: self.set_distance(airport, ctx.location)) \
            .filter(lambda airport: airport.distance < ctx.distance) \
            .to_sorted_list(key_selector=lambda airport: airport.distance) \
            .flat_map(lambda airports: airports) \
@@ -39,7 +37,7 @@ class RxPyAirportReports(AirportReports):
            )
 
     def report_airport_metrics(self, ctx):
-        airports = self.airports_dict(ctx.repo.airports_observable())
+        airports = self.airports_dict(ctx.repo)
 
         ctx.repo \
            .flights_observable(ctx.year) \
@@ -58,7 +56,7 @@ class RxPyAirportReports(AirportReports):
            )
 
     def report_airports_with_highest_cancellation_rate(self, ctx):
-        airports = self.airports_dict(ctx.repo.airports_observable())
+        airports = self.airports_dict(ctx.repo)
 
         ctx.repo \
            .flights_observable(ctx.year) \
@@ -77,23 +75,9 @@ class RxPyAirportReports(AirportReports):
                      )
            )
 
-    # extend Airport by adding distance attribute
-    Airport = namedtuple("Airport", ["iata", "airport", "city", "state",
-                                     "country", "lat", "long", "distance"])
-
-    def add_distance(self, airport, location):
-        values = list(airport)
-        values.append(self.distance((airport.lat, airport.long), location))
-        return self.Airport._make(values)
-
-    def distance(self, location1, location2, units='miles'):
-        result = vincenty(location1, location2)
-        return result.__getattribute__(units)
-
-    def airports_dict(self, obs):
-        return obs.to_dict(key_selector=lambda airport: airport.iata) \
-                  .to_blocking() \
-                  .first()
+    def set_distance(self, airport, location):
+        airport.distance = distance((airport.lat, airport.long), location)
+        return airport
 
     def accumulate(self, metrics, airports, flight):
         orig = flight.Origin
@@ -116,3 +100,9 @@ class RxPyAirportReports(AirportReports):
             raise KeyError("No airport found for " + iata)
         else:
             return AirportMetrics(airport)
+
+    def airports_dict(self, repo):
+        return repo.airports_observable() \
+                   .to_dict(key_selector=lambda airport: airport.iata) \
+                   .to_blocking() \
+                   .first()

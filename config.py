@@ -1,4 +1,8 @@
-from yaml import load, dump
+"""
+    Configuration data for report apps.
+"""
+
+from yaml import load
 
 
 class Config(object):
