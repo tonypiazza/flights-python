@@ -3,7 +3,7 @@
 """
 
 import pandas as pd
-from report.airport import AirportMetrics, AirportReports, distance
+from report.airport import AirportMetrics, AirportReports
 
 
 class PandasAirportReports(AirportReports):
@@ -22,8 +22,8 @@ class PandasAirportReports(AirportReports):
         airports = pd.read_csv(ctx.repo.airports_file())
         dist_values = []
         for airport in airports.itertuples():
-            dist_values.append(distance((airport.lat, airport.long),
-                                        ctx.location).miles)
+            dist_values.append(self.distance((airport.lat, airport.long),
+                                             ctx.location).miles)
         airports['distance'] = dist_values
         result = airports[airports.distance < ctx.distance].sort_values(by='distance')
 

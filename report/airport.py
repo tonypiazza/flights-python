@@ -7,11 +7,6 @@ from repository import Repository
 from report.metrics import FlightBasedMetrics
 
 
-def distance(location1, location2, units='miles'):
-    result = vincenty(location1, location2)
-    return result.__getattribute__(units)
-
-
 class AirportReports(object):
     def report_airports_for_state(self, ctx):
         raise NotImplementedError
@@ -24,6 +19,9 @@ class AirportReports(object):
 
     def report_airports_with_highest_cancellation_rate(self, ctx):
         raise NotImplementedError
+
+    def distance(self, location1, location2, units='miles'):
+        return vincenty(location1, location2).__getattribute__(units)
 
 
 class AirportMetrics(FlightBasedMetrics):

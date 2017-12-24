@@ -2,7 +2,7 @@
     RxPy implementation of Airport reports
 """
 
-from report.airport import AirportMetrics, AirportReports, distance
+from report.airport import AirportMetrics, AirportReports
 
 
 class RxPyAirportReports(AirportReports):
@@ -76,7 +76,7 @@ class RxPyAirportReports(AirportReports):
            )
 
     def set_distance(self, airport, location):
-        airport.distance = distance((airport.lat, airport.long), location)
+        airport.distance = self.distance((airport.lat, airport.long), location)
         return airport
 
     def accumulate(self, metrics, airports, flight):
