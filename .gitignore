@@ -2,3 +2,9 @@ data/*.csv
 __pycache__/
 *.py[cod]
 *$py.class
+
+pip-selfcheck.json
+pyvenv.cfg
+bin/*
+include/*
+lib/*

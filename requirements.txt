@@ -1,0 +1,9 @@
+climenu==1.6.0
+geopy==1.11.0
+numpy==1.13.3
+pandas==0.21.1
+prompt==0.4.1
+python-dateutil==2.6.1
+pytz==2017.3
+Rx==1.6.0
+six==1.11.0
