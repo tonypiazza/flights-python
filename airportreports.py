@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
     Interactive Airport reports
 """
