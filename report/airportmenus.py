@@ -12,8 +12,8 @@ from report.implementation import ImplementationType, ImplementationSelector
 
 
 impl = ImplementationSelector(
-    (ImplementationType.Pandas, PandasAirportReports),
-    (ImplementationType.RxPY, RxPyAirportReports)
+    (ImplementationType.Pandas, PandasAirportReports()),
+    (ImplementationType.RxPY, RxPyAirportReports())
 )
 
 

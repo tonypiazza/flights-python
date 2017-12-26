@@ -25,7 +25,7 @@ class ImplementationSelector(object):
             self.__impls[impl_enum] = impl_value
 
     def __call__(self, *args, **kwargs):
-        return self.__impls[self.current_impl](*args, **kwargs)
+        return self.__impls[self.current_impl]
 
     def use_impl(self, impl_enum):
         if impl_enum in self.__impls:
