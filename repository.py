@@ -72,14 +72,24 @@ class Repository(object):
         return open(self.config.airportPath)
 
     def airports_observable(self):
-        reader = csv.reader(self.airports_file())
-        reader.__next__()   # skip the header
-        return Observable.from_(Airport(*row) for row in reader)
+        def emit_airports(observer):
+            reader = csv.reader(self.airports_file())
+            reader.__next__()   # skip the header
+            for row in reader:
+                observer.on_next(Airport(*row))
+            observer.on_completed()
+
+        return Observable.create(emit_airports)
 
     def flights_file(self, year):
-        return open(self.config.flightPaths[year], buffering=10000000)
+        return open(self.config.flightPaths[year])
 
     def flights_observable(self, year):
-        reader = csv.reader(self.flights_file(year))
-        reader.__next__()   # skip the header
-        return Observable.from_(Flight(*row) for row in reader)
+        def emit_flights(observer):
+            reader = csv.reader(self.flights_file(year))
+            reader.__next__()  # skip the header
+            for row in reader:
+                observer.on_next(Flight(*row))
+            observer.on_completed()
+
+        return Observable.create(emit_flights)
