@@ -8,6 +8,7 @@ from rx import Observable
 
 
 class Airport(object):
+    """Domain class for airport data"""
     def __init__(self, iata, airport, city, state, country, lat, long):
         self.iata = iata
         self.airport = airport
@@ -28,6 +29,7 @@ def convert_bool(value):
 
 
 class Flight(object):
+    """Domain class for flight data"""
     def __init__(self, year, month, dayofmonth, dayofweek, deptime, crsdeptime,
                  arrtime, crsarrtime, uniquecarrier, flightnum, tailnum,
                  actualelapsedtime, crselapsedtime, airtime, arrdelay, depdelay,
@@ -66,12 +68,15 @@ class Flight(object):
 
 
 class Repository(object):
+    """Data access for flight-related data"""
     config = Config()
 
     def airports_file(self):
+        """Returns file containing airport data"""
         return open(self.config.airportPath)
 
     def airports_observable(self):
+        """Returns rx.Observable that emits airport data"""
         def emit_airports(observer):
             reader = csv.reader(self.airports_file())
             reader.__next__()   # skip the header
@@ -82,9 +87,11 @@ class Repository(object):
         return Observable.create(emit_airports)
 
     def flights_file(self, year):
+        """Returns file containing flight data for the specified year"""
         return open(self.config.flightPaths[year])
 
     def flights_observable(self, year):
+        """Returns rx.Observable that emits flight data for the specified year"""
         def emit_flights(observer):
             reader = csv.reader(self.flights_file(year))
             reader.__next__()  # skip the header

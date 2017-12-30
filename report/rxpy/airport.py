@@ -6,6 +6,7 @@ from report.airport import AirportMetrics, AirportReports
 
 
 class RxPyAirportReports(AirportReports):
+    """RxPY implementation of AirportReports class"""
 
     def report_airports_for_state(self, ctx):
         ctx.repo \

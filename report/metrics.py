@@ -4,6 +4,7 @@
 
 
 class FlightBasedMetrics(object):
+    """Common metrics useful across various domain types"""
     def __init__(self, subject):
         self.totalFlights = 0
         self.totalCancelled = 0

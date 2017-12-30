@@ -6,6 +6,9 @@ from yaml import load
 
 
 class Config(object):
+    """Loads application configuration from YAML file and makes it available as
+       properties
+    """
     instance = None
 
     class __Config(object):

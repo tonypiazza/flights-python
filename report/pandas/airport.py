@@ -7,6 +7,8 @@ from report.airport import AirportMetrics, AirportReports
 
 
 class PandasAirportReports(AirportReports):
+    """Pandas implementation of AirportReports class"""
+
     def report_airports_for_state(self, ctx):
         airports = pd.read_csv(ctx.repo.airports_file())
         result = airports[airports.state == ctx.state].sort_values(by='iata')

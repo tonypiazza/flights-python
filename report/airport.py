@@ -8,6 +8,8 @@ from report.metrics import FlightBasedMetrics
 
 
 class AirportReports(object):
+    """Definitions for airport-related reports"""
+
     def report_airports_for_state(self, ctx):
         raise NotImplementedError
 
@@ -25,6 +27,7 @@ class AirportReports(object):
 
 
 class AirportMetrics(FlightBasedMetrics):
+    """Airport-related metrics based on flight data"""
     def __init__(self, subject):
         super().__init__(subject)
         self.totalCancelledCarrier = 0
@@ -35,6 +38,7 @@ class AirportMetrics(FlightBasedMetrics):
         self.totalDestinations = 0
 
     def add_flight(self, flight):
+        """Aggregate various metrics based on the specified flight"""
         self.totalFlights += 1
         if flight.Origin == self.subject.iata:
             self.totalOrigins += 1
@@ -57,6 +61,7 @@ class AirportMetrics(FlightBasedMetrics):
 
 
 class ReportContext(object):
+    """Simple wrapper around various properties needed during report execution"""
     def __init__(self):
         self.limit = None
         self.state = None

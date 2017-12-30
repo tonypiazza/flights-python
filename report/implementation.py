@@ -7,6 +7,10 @@ from functools import partial
 
 
 class ImplementationSelector(object):
+    """Wraps multiple report implementations and makes it easy to switch
+       between them
+    """
+
     current_impl = None
     __impls = {}
     report_group_subtitle = ""
@@ -57,5 +61,6 @@ class ImplementationSelector(object):
 
 
 class ImplementationType(Enum):
+    """Enum that represents each possible type of implementation of reports"""
     Pandas = 1
     RxPY = 2
