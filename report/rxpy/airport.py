@@ -12,13 +12,13 @@ class RxPyAirportReports(AirportReports):
         ctx.repo \
            .airports_observable() \
            .filter(lambda airport: airport.state == ctx.state) \
+           .to_sorted_list(key_selector=lambda airport: airport.iata) \
+           .flat_map(lambda airports: airports) \
            .subscribe(lambda airport:
                       print("{0:3}\t{1:<40}\t{2:<20}".format(
                             airport.iata,
                             airport.airport,
-                            airport.city)
-                      )
-           )
+                            airport.city)))
 
     def report_airports_near_location(self, ctx):
         ctx.repo \
@@ -33,9 +33,7 @@ class RxPyAirportReports(AirportReports):
                             airport.airport[:40],
                             airport.state,
                             airport.city[:25],
-                            airport.distance)
-                      )
-           )
+                            airport.distance)))
 
     def report_airport_metrics(self, ctx):
         airports = self.airports_dict(ctx.repo)
@@ -52,9 +50,7 @@ class RxPyAirportReports(AirportReports):
                            metric.subject.airport[:35],
                            metric.totalFlights,
                            metric.cancellation_rate() * 100.0,
-                           metric.diversion_rate() * 100.0)
-                     )
-           )
+                           metric.diversion_rate() * 100.0)))
 
     def report_airports_with_highest_cancellation_rate(self, ctx):
         airports = self.airports_dict(ctx.repo)
@@ -72,9 +68,7 @@ class RxPyAirportReports(AirportReports):
                      print("{0:3}\t{1:<35}\t{2:>6.1f}".format(
                            metric.subject.iata,
                            metric.subject.airport[:35],
-                           metric.cancellation_rate() * 100.0)
-                     )
-           )
+                           metric.cancellation_rate() * 100.0)))
 
     def set_distance(self, airport, location):
         airport.distance = self.distance((airport.lat, airport.long), location)
