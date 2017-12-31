@@ -25,7 +25,7 @@ class PandasAirportReports(AirportReports):
         dist_values = []
         for airport in airports.itertuples():
             dist_values.append(self.distance((airport.lat, airport.long),
-                                             ctx.location).miles)
+                                             ctx.location))
         airports['distance'] = dist_values
         result = airports[airports.distance < ctx.distance].sort_values(by='distance')
 
