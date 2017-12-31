@@ -1,3 +1,7 @@
+"""
+    Benchmark performance of airport reports.
+"""
+
 from report.airport import ReportContext
 from report.pandas.airport import PandasAirportReports
 from report.rxpy.airport import RxPyAirportReports
